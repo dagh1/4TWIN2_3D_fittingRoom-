@@ -31,7 +31,7 @@ router.post('/add', function(req, res, next) {
   else{
   console.log(newcontact);
   
-  res.json(" : Contact :" + newcontact._id +" added");
+  res.json(" : photo :" + newcontact._id +" added");
   
   }
   });}
