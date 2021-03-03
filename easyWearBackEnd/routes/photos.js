@@ -20,7 +20,7 @@ router.post("/add", function (req, res, next) {
     else {
       console.log(newcontact);
 
-      res.json(" : Please work  :" + newcontact._id + " added");
+      res.json(" : Phone  :" + newcontact._id + " added");
     }
   });
 });
