@@ -31,7 +31,7 @@ router.post('/add', function(req, res, next) {
   else{
   console.log(newcontact);
   
-  res.json(" : photo :" + newcontact._id +" added");
+  res.json(" : FAROUK :" + newcontact._id +" added");
   
   }
   });}
@@ -39,3 +39,4 @@ router.post('/add', function(req, res, next) {
 
 
 module.exports = router;
+
