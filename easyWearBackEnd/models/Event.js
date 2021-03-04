@@ -13,7 +13,7 @@ const joiEventSchema = Joi.object({
     _id: Joi.ObjectId(),
     eventName: Joi.string().required(),
     eventCode: Joi.number().positive().required(),
-    date: Joi.date().default( () => dateEvent.getDate(), 'date of creation'), 
+    date: Joi.date().default( () => dateEvent.getDate(), 'date of creation'),
 });
 
 function _validateSchema(event1){
