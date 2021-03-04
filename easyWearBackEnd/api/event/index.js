@@ -4,7 +4,7 @@ const controller = require('./controller');
 const wrap = require('co-express');
 
 
-router.post('/addLivraison',wrap(controller.addLivraison));
+router.post('/addEvent',wrap(controller.addEvent));
 
 
 module.exports = router ;

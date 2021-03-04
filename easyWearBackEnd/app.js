@@ -1,57 +1,88 @@
 var createError = require('http-errors');
+const http = require('http');
 var express = require('express');
+const co = require('co');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var logger = require('chpr-logger');
+const { configure } = require('./config/express');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var mongoose = require('mongoose');
-var configDB=require('./database/database.json');
-var photosRouter = require('./routes/photos')
-var app = express();
+const url ="mongodb://localhost:27017/PiDev";
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'twig');
+let app;
+let server;
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+mongoose.connect(url,{useNewUrlParser: true});
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/photo', photosRouter);
+const mongo=mongoose.connection;
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+mongo.on('connected',()=>{
+
+    console.log('initialisation');
+
+
+});
+mongo.on('open',()=>{
+    console.log('connexion etablie');
+
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+mongo.on('error',(err)=>{
+    console.log(err);
 });
 
-//import database
+/**
+ * Start the web app.
+ *
+ * @returns {Promise} when app end to start
+ */
+async function start() {
+    if (app) {
+        return app;
+    }
+    logger.info('Express web server creation');
+    app = configure(express());
+    server = http.createServer(app);
+    await server.listen(app.get('port'));
 
-//mongo config
-const connect = mongoose.connect(
+    logger.info(
+        {
+            port: server.address().port,
+            environment: process.env.NODE_ENV,
+        },
+        '✔ Server running',
+    );
 
-configDB.mongo.uri ,
-{
-useNewUrlParser: true ,
-useUnifiedTopology: true
-},
-()=> console.log("Connected to DB !!")
-);
+    return app;
+}
 
-module.exports = app;
+/**
+ * Stop the web app.
+ *
+ * @returns {Promise} when app end to start
+ */
+async function stop() {
+    if (server) {
+        await server.close();
+        server = null;
+        app = null;
+    }
+    await mongoose.disconnect();
+    return Promise.resolve();
+}
+
+if (!module.parent) {
+    co(start);
+}
+
+module.exports = {
+    start,
+    stop,
+    get server() {
+        return server;
+    },
+    get app() {
+        return app;
+    },
+};

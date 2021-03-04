@@ -10,7 +10,7 @@ const eventSchema = mongoose.Schema({
 });
 
 const joiEventSchema = Joi.object({
-    _id: Joi.ObjectId(),
+    _id: Joi.objectId(),
     eventName: Joi.string().required(),
     eventCode: Joi.number().positive().required(),
     date: Joi.date().default( () => dateEvent.getDate(), 'date of creation'),
