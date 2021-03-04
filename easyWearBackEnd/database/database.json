@@ -1,5 +1,5 @@
 {
-    "mongo":{
-    "uri":"mongodb://localhost:27017/PiDev"
+    "mongo": {
+        "uri":"mongodb://localhost:27017/PiDev"
     }
-    }
+}
