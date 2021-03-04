@@ -9,14 +9,14 @@ function _validateschemaEvent(body){
 }
 
 
-
 async function addEvent(req,res){
-    /* const  livraison = await livraisons.insertOne(req.body);
-    if(livraison){
-        return res.status(200).send(livraison);
+    const  event = await events.insertOne(req.body);
+    if(event){
+        return res.status(200).send(event);
     }
-    return res.status(400).end(); */
+    return res.status(400).end();
 }
+
 
 module.exports = {
     addEvent
